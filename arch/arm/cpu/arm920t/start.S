@@ -25,16 +25,16 @@
  *************************************************************************
  */
 
-	.globl	reset
+	.globl	reset/*系统复位的位置由u-boot.lds来决定*/
 
 reset:
 	/*
 	 * set the cpu to SVC32 mode
 	 */
 	mrs	r0, cpsr
-	bic	r0, r0, #0x1f
-	orr	r0, r0, #0xd3
-	msr	cpsr, r0
+	bic	r0, r0, #0x1f /*0b00011111 clear low 5 bit of r0*/
+	orr	r0, r0, #0xd3 /*0b11010011 set r0*/
+	msr	cpsr, r0/*set svc mode, forbid irq and fiq and using arm instruction set*/
 
 #if	defined(CONFIG_AT91RM9200DK) || defined(CONFIG_AT91RM9200EK)
 	/*
@@ -57,8 +57,8 @@ copyex:
 #  define pWTCON	0x15300000
 #  define INTMSK	0x14400008	/* Interrupt-Controller base addresses */
 #  define CLKDIVN	0x14800014	/* clock divisor register */
-#else
-#  define pWTCON	0x53000000
+#else  /*for s3c2440*/
+#  define pWTCON	0x53000000  /*watch dog timer*/
 #  define INTMSK	0x4A000008	/* Interrupt-Controller base addresses */
 #  define INTSUBMSK	0x4A00001C
 #  define CLKDIVN	0x4C000014	/* clock divisor register */
@@ -95,7 +95,7 @@ copyex:
 	bl	cpu_init_crit
 #endif
 
-	bl	_main
+	bl	_main /*go to the function _main, but keep ret address in link register*/
 
 /*------------------------------------------------------------------------------*/
 

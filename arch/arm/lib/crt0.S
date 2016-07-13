@@ -22,7 +22,7 @@
  *
  * 1. Set up initial environment for calling board_init_f().
  *    This environment only provides a stack and a place to store
- *    the GD ('global data') structure, both located in some readily
+ *    the GD ('global data') structure, both located in some readily(easyly)
  *    available RAM (SRAM, locked cache...). In this context, VARIABLE
  *    global data, initialized or not (BSS), are UNAVAILABLE; only
  *    CONSTANT initialized data are available. GD should be zeroed
