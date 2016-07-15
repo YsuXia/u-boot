@@ -6,6 +6,7 @@
 #
 
 # Modified for U-Boot
+# 查看是否存在spl或者tpl开头的对象路径
 prefix := tpl
 src := $(patsubst $(prefix)/%,%,$(obj))
 ifeq ($(obj),$(src))
@@ -52,8 +53,10 @@ include scripts/Kbuild.include
 
 # For backward compatibility check that these variables do not change
 save-cflags := $(CFLAGS)
+#Makefile.build obj=scripts/Kconfig bubblegum_defconfig
 
 # The filename Kbuild has precedence over Makefile
+# 判断源代码顶层目录里面是否存在kbuild文件或者是Makefile文件
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)

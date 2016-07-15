@@ -20,6 +20,9 @@ NAME =
 MAKEFLAGS += -rR --include-dir=$(CURDIR)
 
 # Avoid funny character set dependencies
+# linux中会为程序设置执行的语言环境,LC_ALL代表去除所有本地化的设置
+# LC_COLLATE定义环境的排序和比较规则
+# LC_NUMERIC非货币的数字显示格式
 unexport LC_ALL
 LC_COLLATE=C
 LC_NUMERIC=C
@@ -142,6 +145,8 @@ $(if $(KBUILD_OUTPUT),, \
      $(error failed to create output directory "$(saved-output)"))
 
 PHONY += $(MAKECMDGOALS) sub-make
+
+result := $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS))
 
 $(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
 	@:
@@ -392,9 +397,11 @@ export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 # Rules shared between *config targets and build targets
 
 # Basic helpers built in scripts/
+# $(build)变量的定义位于文件scripts/Kbuild.include当中
+# build := -f $(srctree)/scripts/Makefile.build obj
 PHONY += scripts_basic
 scripts_basic:
-	$(Q)$(MAKE) $(build)=scripts/basic
+	$(Q)$(MAKE) $(build)=scripts/basic #$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.build obj=scripts/basic
 	$(Q)rm -f .tmp_quiet_recordmcount
 
 # To avoid any implicit rule to kick in, define an empty command.
@@ -471,8 +478,8 @@ KBUILD_DEFCONFIG := sandbox_defconfig
 export KBUILD_DEFCONFIG KBUILD_KCONFIG
 
 config: scripts_basic outputmakefile FORCE
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
-
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@  #$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.build obj=scripts/Kconfig $@
+#The only place to match make xxx_defconfig
 %config: scripts_basic outputmakefile FORCE
 	$(Q)$(MAKE) $(build)=scripts/kconfig $@
 
@@ -497,7 +504,9 @@ $(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
 # if auto.conf.cmd is missing then we are probably in a cleaned tree so
 # we execute the config step to be sure to catch updated Kconfig files
 include/config/%.conf: $(KCONFIG_CONFIG) include/config/auto.conf.cmd
-	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
+	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig#用于利用.config文件生成auto.conf和auto.conf.cmd文件 
+	#这里调用的是顶层的Makefile文件
+	#silentoldconfig的定义位于scripts/kconfig/Makefile文件当中
 	@# If the following part fails, include/config/auto.conf should be
 	@# deleted so "make silentoldconfig" will be re-run on the next build.
 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.autoconf || \

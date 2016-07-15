@@ -564,7 +564,7 @@ int main(int ac, char **av)
 	conf_parse(name);
 	//zconfdump(stdout);
 	if (sync_kconfig) {
-		name = conf_get_configname();
+		name = conf_get_configname();//KCONFIG_CONFIG .config
 		if (stat(name, &tmpstat)) {
 			fprintf(stderr, _("***\n"
 				"*** Configuration file \"%s\" not found!\n"
@@ -593,7 +593,7 @@ int main(int ac, char **av)
 	case oldconfig:
 	case listnewconfig:
 	case olddefconfig:
-		conf_read(NULL);
+		conf_read(NULL);//read .conf
 		break;
 	case allnoconfig:
 	case allyesconfig:
