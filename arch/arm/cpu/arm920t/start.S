@@ -96,6 +96,7 @@ copyex:
 #endif
 
 	bl	_main /*go to the function _main, but keep ret address in link register*/
+	/*function _main defined in arch/arm/lib/crt0.S*/
 
 /*------------------------------------------------------------------------------*/
 

@@ -13,6 +13,7 @@
 
 hostprogs-y	:= fixdep
 always		:= $(hostprogs-y)
+#always tell kbuild to compile fixdep no matter whether there is any rule
 
 # fixdep is needed to compile other host programs
 $(addprefix $(obj)/,$(filter-out fixdep,$(always))): $(obj)/fixdep

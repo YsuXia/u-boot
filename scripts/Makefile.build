@@ -7,6 +7,7 @@
 
 # Modified for U-Boot
 # 查看是否存在spl或者tpl开头的对象路径
+# scripts/basic, scripts/kconfig
 prefix := tpl
 src := $(patsubst $(prefix)/%,%,$(obj))
 ifeq ($(obj),$(src))
@@ -49,7 +50,7 @@ subdir-ccflags-y :=
 -include $(prefix)/include/autoconf.mk
 include scripts/Makefile.uncmd_spl
 
-include scripts/Kbuild.include
+include scripts/Kbuild.include #kbuild通用的函数的定义
 
 # For backward compatibility check that these variables do not change
 save-cflags := $(CFLAGS)
@@ -60,6 +61,8 @@ save-cflags := $(CFLAGS)
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
+#对于obj=scripts/basic，会include scripts/basic/Makefile文件用来编译生成fixdep宿主机可执行文件
+#对于obj=scripts/kconfig,会include scripts/kconfig/Makefile文件，该文件里面有menuconfig目标，用来对代码树进行配置
 
 # Added for U-Boot
 asflags-y  += $(PLATFORM_CPPFLAGS)

@@ -35,6 +35,7 @@ gconfig: $(obj)/gconf
 
 menuconfig: $(obj)/mconf
 	$< $(silent) $(Kconfig)
+#用mconf工具来对$(Kconfig)进行处理，对于arm架构应该是arch/arm/kconfig
 
 config: $(obj)/conf
 	$< $(silent) --oldaskconfig $(Kconfig)

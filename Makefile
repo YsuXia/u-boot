@@ -401,7 +401,8 @@ export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
 # build := -f $(srctree)/scripts/Makefile.build obj
 PHONY += scripts_basic
 scripts_basic:
-	$(Q)$(MAKE) $(build)=scripts/basic #$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.build obj=scripts/basic
+	$(Q)$(MAKE) $(build)=scripts/basic 
+#$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.build obj=scripts/basic
 	$(Q)rm -f .tmp_quiet_recordmcount
 
 # To avoid any implicit rule to kick in, define an empty command.
@@ -482,6 +483,14 @@ config: scripts_basic outputmakefile FORCE
 #The only place to match make xxx_defconfig
 %config: scripts_basic outputmakefile FORCE
 	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+#scripts/kconfig文件里面的规则保证根据.config文件生成auto.conf,auto.conf.cmd文件
+#outputmakefile有可能不执行
+#scripts_basic:
+#$(Q)$(MAKE) $(build)=scripts/basic 
+#$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.build obj=scripts/basic
+#$(Q)rm -f .tmp_quiet_recordmcount
+#$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.build obj=scripts/kconfig  xxx_defconfig
+
 
 else
 # ===========================================================================
@@ -1199,6 +1208,12 @@ cmd_smap = \
 
 u-boot:	$(u-boot-init) $(u-boot-main) u-boot.lds FORCE
 	$(call if_changed,u-boot__)
+#quiet_cmd_u-boot__ ?= LD      $@
+#cmd_u-boot__ ?= $(LD) $(LDFLAGS) $(LDFLAGS_u-boot) -o $@ \
+#-T u-boot.lds $(u-boot-init)                             \
+#--start-group $(u-boot-main) --end-group                 \
+#$(PLATFORM_LIBS) -Map u-boot.map
+#可以在arch/arm/config.mk当中修改u-boot__命令
 ifeq ($(CONFIG_KALLSYMS),y)
 	$(call cmd,smap)
 	$(call cmd,u-boot__) common/system_map.o
@@ -1634,7 +1649,8 @@ ifneq ($(cmd_files),)
 endif
 
 endif	# skip-makefile
-
+#FORCE这个目标既没有依赖，也没有执行的命令，可以认为该目标总是最新的,
+#那么当FORCE被包含在某个规则当中的时候，该规则总是会被执行.
 PHONY += FORCE
 FORCE:
 

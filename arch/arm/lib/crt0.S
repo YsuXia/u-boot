@@ -74,6 +74,11 @@ ENTRY(_main)
 	ldr	sp, =(CONFIG_SPL_STACK)
 #else
 	ldr	sp, =(CONFIG_SYS_INIT_SP_ADDR)
+/* #define CONFIG_SYS_INIT_SP_ADDR (CONFIG_SYS_SDRAM_BASE + 0x1000 - \
+                 GENERATED_GBL_DATA_SIZE)
+跳转到内存4k处向下GENERATED_GBL_DATA_SIZE位置处
+*/
+
 #endif
 #if defined(CONFIG_CPU_V7M)	/* v7M forbids using SP as BIC destination */
 	mov	r3, sp
@@ -83,7 +88,7 @@ ENTRY(_main)
 	bic	sp, sp, #7	/* 8-byte alignment for ABI compliance */
 #endif
 	mov	r0, sp
-	bl	board_init_f_alloc_reserve
+	bl	board_init_f_alloc_reserve/*r0 用于传递参数和返回参数,该函数用于分配保留的空间用于malloc函数*/
 	mov	sp, r0
 	/* set up gd here, outside any C code */
 	mov	r9, r0
