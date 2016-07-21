@@ -838,7 +838,7 @@ static init_fnc_t init_sequence_f[] = {
 	trace_early_init,
 #endif
 	initf_malloc,
-	initf_console_record,
+	initf_console_record,/*设置控制台输出和输入缓冲区*/
 #if defined(CONFIG_MPC85xx) || defined(CONFIG_MPC86xx)
 	/* TODO: can this go into arch_cpu_init()? */
 	probecpu,
@@ -847,7 +847,8 @@ static init_fnc_t init_sequence_f[] = {
 	x86_fsp_init,
 #endif
 	arch_cpu_init,		/* basic arch cpu dependent setup */
-	initf_dm,
+	/*设置timer和cache*/
+	initf_dm,/*dm means device model*/
 	arch_cpu_init_dm,
 	mark_bootstage,		/* need timer, go after init dm */
 #if defined(CONFIG_BOARD_EARLY_INIT_F)
@@ -1032,7 +1033,7 @@ static init_fnc_t init_sequence_f[] = {
 	NULL,
 };
 
-void board_init_f(ulong boot_flags)
+void board_init_f(ulong boot_flags)/*boot_flags is set to 0*/
 {
 #ifdef CONFIG_SYS_GENERIC_GLOBAL_DATA
 	/*

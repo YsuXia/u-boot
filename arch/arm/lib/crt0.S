@@ -95,7 +95,7 @@ ENTRY(_main)
 	bl	board_init_f_init_reserve
 
 	mov	r0, #0
-	bl	board_init_f
+	bl	board_init_f /*common/board_f.c*/
 
 #if ! defined(CONFIG_SPL_BUILD)
 

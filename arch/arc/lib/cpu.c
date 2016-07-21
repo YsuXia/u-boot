@@ -12,7 +12,7 @@ DECLARE_GLOBAL_DATA_PTR;
 
 int arch_cpu_init(void)
 {
-	timer_init();
+	timer_init();/*对于s3c2440,使用timer4,并且设置时钟为10ms*/
 
 	gd->cpu_clk = CONFIG_SYS_CLK_FREQ;
 	gd->ram_size = CONFIG_SYS_SDRAM_SIZE;

@@ -62,6 +62,7 @@ void fix_drivers(void)
 {
 	struct driver *drv =
 		ll_entry_start(struct driver, driver);
+	/*".u_boot_list_2_"#_list"_1" .u_boot_list_2__driver_1*/
 	const int n_ents = ll_entry_count(struct driver, driver);
 	struct driver *entry;
 
@@ -133,6 +134,7 @@ int dm_init(void)
 		return -EINVAL;
 	}
 	INIT_LIST_HEAD(&DM_UCLASS_ROOT_NON_CONST);
+	/*DM_UCLASS_ROOT_NON_CONST:struct list_head uclass_root*/
 
 #if defined(CONFIG_NEEDS_MANUAL_RELOC)
 	fix_drivers();
